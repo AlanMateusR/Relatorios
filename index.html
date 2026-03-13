@@ -60,6 +60,8 @@
             gap: 2rem;
             max-width: 1400px;
             margin: 0 auto;
+            /* Faz com que todos os cards na mesma linha tenham a mesma altura */
+            align-items: stretch; 
         }
 
         .card {
@@ -162,6 +164,12 @@
             gap: 1.5rem;
         }
 
+        .text-block {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
         .text-block h3 {
             font-size: 0.875rem;
             text-transform: uppercase;
@@ -178,20 +186,12 @@
             padding: 1rem;
             border-radius: 8px;
             border-left: 2px solid var(--border-color);
+            flex-grow: 1; /* Faz a caixa preencher o espaço restante, alinhando visualmente os blocos */
         }
 
         .text-block.strengths p { border-left-color: var(--score-5); }
         .text-block.improvements p { border-left-color: var(--score-3); }
         .text-block.summary p { border-left-color: var(--score-4); }
-
-        /* Scrollbar styling for long texts if needed */
-        .scrollable {
-            max-height: 120px;
-            overflow-y: auto;
-        }
-        .scrollable::-webkit-scrollbar { width: 6px; }
-        .scrollable::-webkit-scrollbar-track { background: transparent; }
-        .scrollable::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
 
         @media (max-width: 768px) {
             body { padding: 1rem; }
@@ -239,15 +239,15 @@
             <div class="details-section">
                 <div class="text-block strengths">
                     <h3>Pontos Fortes</h3>
-                    <p class="scrollable">Muito concentrada, Muito madura e leva o trabalho com seriedade, segue documentações com precisão e executa os conceitos aprendidos com facilidade, alta competência corporativa e postura séria, dificilmente desliza em foco. Aprende muito rápido e é extremamente esforçada em fazer o trabalho com qualidade.</p>
+                    <p>Muito concentrada, Muito madura e leva o trabalho com seriedade, segue documentações com precisão e executa os conceitos aprendidos com facilidade, alta competência corporativa e postura séria, dificilmente desliza em foco. Aprende muito rápido e é extremamente esforçada em fazer o trabalho com qualidade.</p>
                 </div>
                 <div class="text-block improvements">
                     <h3>Pontos de Melhoria</h3>
-                    <p class="scrollable">Às vezes responde a questionamentos ou apontamentos de forma um pouco ríspida, poderia melhorar a postura e posicionamento menos defensivo em casos de correção de gap na operação.</p>
+                    <p>Às vezes responde a questionamentos ou apontamentos de forma um pouco ríspida, poderia melhorar a postura e posicionamento menos defensivo em casos de correção de gap na operação.</p>
                 </div>
                 <div class="text-block summary">
                     <h3>Resumo e Contexto Geral</h3>
-                    <p class="scrollable">Stephany apresenta excelente desempenho técnico, demonstrando alta precisão na tratativa de chamados e anomalias, além de manter o melhor índice de qualidade nas auditorias de QA. No aspecto comportamental, precisa evoluir na forma de lidar com correções, adotando uma postura menos defensiva. No geral, é uma analista muito competente e confiável.</p>
+                    <p>Stephany apresenta excelente desempenho técnico, demonstrando alta precisão na tratativa de chamados e anomalias, além de manter o melhor índice de qualidade nas auditorias de QA. No aspecto comportamental, precisa evoluir na forma de lidar com correções, adotando uma postura menos defensiva. No geral, é uma analista muito competente e confiável com pequenos ajustes comportamentais a desenvolver.</p>
                 </div>
             </div>
         </div>
@@ -283,15 +283,15 @@
             <div class="details-section">
                 <div class="text-block strengths">
                     <h3>Pontos Fortes</h3>
-                    <p class="scrollable">Compreende rápido os conceitos, é concentrado e segue orientações sem resistência. Claramente lê as documentações e faz questão de anotar em caderno pontos importantes de atenção, tem autonomia para aplicar o que acabou de aprender. Normalmente ajuda com tarefas de outros analistas quando solicitado.</p>
+                    <p>Compreende rápido os conceitos, é concentrado e segue orientações sem resistência. Claramente lê as documentações e faz questão de anotar em caderno pontos importantes de atenção, tem autonomia para aplicar o que acabou de aprender. Normalmente ajuda com tarefas de outros analistas quando solicitado.</p>
                 </div>
                 <div class="text-block improvements">
                     <h3>Pontos de Melhoria</h3>
-                    <p class="scrollable">É necessário aplicar mais esforço na construção de chamados e exercitar atenção aos detalhes processuais. O caminho "mais fácil e rápido" para execução das tarefas precisa ser abandonado. É vital focar na qualidade do trabalho e reduzir a frequência de erros operacionais.</p>
+                    <p>É necessário aplicar mais esforço na construção de chamados e exercitar atenção aos detalhes processuais. O caminho "mais fácil e rápido" para execução das tarefas precisa ser abandonado. É vital focar na qualidade do trabalho e reduzir a frequência de erros operacionais.</p>
                 </div>
                 <div class="text-block summary">
                     <h3>Resumo e Contexto Geral</h3>
-                    <p class="scrollable">Gabriel apresenta bom comportamento profissional, sendo receptivo a orientações. No entanto, seu desempenho técnico e nível de proatividade precisam de melhoria significativa. A qualidade dos chamados tem sido baixa, com registros pouco detalhados. É necessário abandonar a abordagem focada apenas em rapidez e priorizar a qualidade técnica e aderência aos processos.</p>
+                    <p>Gabriel apresenta bom comportamento profissional, sendo receptivo a orientações. No entanto, seu desempenho técnico e nível de proatividade precisam de melhoria significativa. A qualidade dos chamados tem sido baixa, com registros pouco detalhados. É necessário abandonar a abordagem focada apenas em rapidez e priorizar a qualidade técnica e aderência aos processos.</p>
                 </div>
             </div>
         </div>
@@ -327,15 +327,15 @@
             <div class="details-section">
                 <div class="text-block strengths">
                     <h3>Pontos Fortes</h3>
-                    <p class="scrollable">Nos últimos 6 meses tem se mostrado mais concentrada e focada na excelência. Demonstra interesse em entender assuntos aprofundados para melhorar a operação. Busca ajudar com tarefas manuais que exigem tempo. Reage a correções com maturidade e segue documentações sem resistência.</p>
+                    <p>Nos últimos 6 meses tem se mostrado mais concentrada e focada na excelência. Demonstra interesse em entender assuntos aprofundados para melhorar a operação. Busca ajudar com tarefas manuais que exigem tempo. Reage a correções com maturidade e segue documentações sem resistência.</p>
                 </div>
                 <div class="text-block improvements">
                     <h3>Pontos de Melhoria</h3>
-                    <p class="scrollable">Apesar da melhora recente, ocorreu oscilação de desempenho e muitos erros nos primeiros meses. Ela precisa manter atenção consistente em relação à execução de chamados e continuar trabalhando sua concentração durante o serviço para evitar erros pontuais.</p>
+                    <p>Apesar da melhora recente, ocorreu oscilação de desempenho e muitos erros nos primeiros meses. Ela precisa manter atenção consistente em relação à execução de chamados e continuar trabalhando sua concentração durante o serviço para evitar erros pontuais.</p>
                 </div>
                 <div class="text-block summary">
                     <h3>Resumo e Contexto Geral</h3>
-                    <p class="scrollable">Gabrielly apresenta boa postura profissional e ótima proatividade, destacando-se pelo interesse em contribuir além de suas atribuições. Possui conhecimento para executar atividades com qualidade, mas ainda ocorrem erros de atenção. Apresentou evolução significativa nos últimos meses; o principal foco agora é manter a consistência e atenção aos detalhes.</p>
+                    <p>Gabrielly apresenta boa postura profissional e ótima proatividade, destacando-se pelo interesse em contribuir além de suas atribuições. Possui conhecimento para executar atividades com qualidade, mas ainda ocorrem erros de atenção. Apresentou evolução significativa nos últimos meses; o principal foco agora é manter a consistência e atenção aos detalhes.</p>
                 </div>
             </div>
         </div>
