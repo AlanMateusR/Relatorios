@@ -1,176 +1,346 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Relatório de Desempenho - Analistas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Feedback de Analistas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
-<style>
+        :root {
+            --bg-color: #0f1115;
+            --card-bg: #1a1d24;
+            --border-color: #2a2e39;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-color: #3b82f6;
+            
+            /* Status Colors */
+            --score-5: #10b981; /* Verde */
+            --score-4: #3b82f6; /* Azul */
+            --score-3: #f59e0b; /* Amarelo */
+            --score-low: #ef4444; /* Vermelho */
+        }
 
-body{
-    background:#0f172a;
-    color:#e5e7eb;
-    font-family:Segoe UI, Arial;
-    margin:0;
-    padding:30px;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.container{
-    max-width:1100px;
-    margin:auto;
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
 
-h1{
-    margin-bottom:20px;
-}
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
 
-.cards{
-    display:flex;
-    gap:20px;
-    margin-bottom:30px;
-}
+        header h1 {
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
 
-.card{
-    flex:1;
-    background:#1e293b;
-    padding:20px;
-    border-radius:10px;
-}
+        header p {
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-top: 0.5rem;
+        }
 
-.metric{
-    font-size:30px;
-    font-weight:bold;
-    margin-top:10px;
-}
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:#1e293b;
-    border-radius:10px;
-    overflow:hidden;
-}
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
 
-th,td{
-    padding:14px;
-    text-align:left;
-}
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
 
-th{
-    background:#334155;
-}
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
 
-tr:nth-child(even){
-    background:#172036;
-}
+        .profile-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+        }
 
-.good{
-    color:#22c55e;
-    font-weight:bold;
-}
+        .profile-info h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
 
-.medium{
-    color:#facc15;
-    font-weight:bold;
-}
+        .overall-score {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
 
-.bad{
-    color:#ef4444;
-    font-weight:bold;
-}
+        .overall-score span {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
 
-</style>
+        .metrics-grid {
+            display: grid;
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
 
+        .metric {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Dynamically colored metrics */
+        .score-5 { background-color: var(--score-5); }
+        .score-4 { background-color: var(--score-4); }
+        .score-3 { background-color: var(--score-3); }
+        .score-1, .score-2 { background-color: var(--score-low); }
+
+        .details-section {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .text-block h3 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .text-block p {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 2px solid var(--border-color);
+        }
+
+        .text-block.strengths p { border-left-color: var(--score-5); }
+        .text-block.improvements p { border-left-color: var(--score-3); }
+        .text-block.summary p { border-left-color: var(--score-4); }
+
+        /* Scrollbar styling for long texts if needed */
+        .scrollable {
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        .scrollable::-webkit-scrollbar { width: 6px; }
+        .scrollable::-webkit-scrollbar-track { background: transparent; }
+        .scrollable::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .dashboard { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+    <header>
+        <h1>Relatório Operacional de Feedback</h1>
+        <p>Ciclo de Avaliação de Desempenho e Comportamento</p>
+    </header>
 
-<h1>📊 Relatório de Desempenho de Analistas</h1>
+    <div class="dashboard">
+        
+        <div class="card">
+            <div class="profile-section">
+                <img src="https://ca.slack-edge.com/E08UPHKAEGN-U09Q163BRRD-a64ece73017f-512" alt="Foto Stephany" class="profile-img">
+                <div class="profile-info">
+                    <h2>Stephany</h2>
+                    <div class="overall-score">Resumo Geral: <span>4/5</span></div>
+                </div>
+            </div>
 
-<div class="cards">
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-header"><span>Comportamental</span> <span>3/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-3" style="width: 60%"></div></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-header"><span>Técnico</span> <span>5/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-5" style="width: 100%"></div></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-header"><span>Pró-atividade</span> <span>3/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-3" style="width: 60%"></div></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-header"><span>Colaboração</span> <span>4/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-4" style="width: 80%"></div></div>
+                </div>
+            </div>
 
-<div class="card">
-Total de Analistas
-<div class="metric">8</div>
-</div>
+            <div class="details-section">
+                <div class="text-block strengths">
+                    <h3>Pontos Fortes</h3>
+                    <p class="scrollable">Muito concentrada, Muito madura e leva o trabalho com seriedade, segue documentações com precisão e executa os conceitos aprendidos com facilidade, alta competência corporativa e postura séria, dificilmente desliza em foco. Aprende muito rápido e é extremamente esforçada em fazer o trabalho com qualidade.</p>
+                </div>
+                <div class="text-block improvements">
+                    <h3>Pontos de Melhoria</h3>
+                    <p class="scrollable">Às vezes responde a questionamentos ou apontamentos de forma um pouco ríspida, poderia melhorar a postura e posicionamento menos defensivo em casos de correção de gap na operação.</p>
+                </div>
+                <div class="text-block summary">
+                    <h3>Resumo e Contexto Geral</h3>
+                    <p class="scrollable">Stephany apresenta excelente desempenho técnico, demonstrando alta precisão na tratativa de chamados e anomalias, além de manter o melhor índice de qualidade nas auditorias de QA. No aspecto comportamental, precisa evoluir na forma de lidar com correções, adotando uma postura menos defensiva. No geral, é uma analista muito competente e confiável.</p>
+                </div>
+            </div>
+        </div>
 
-<div class="card">
-Tickets Resolvidos
-<div class="metric">1.284</div>
-</div>
+        <div class="card">
+            <div class="profile-section">
+                <img src="https://ca.slack-edge.com/E08UPHKAEGN-U0A2GR2LUAU-b9de0cd6b5d3-512" alt="Foto Gabriel" class="profile-img">
+                <div class="profile-info">
+                    <h2>Gabriel</h2>
+                    <div class="overall-score">Resumo Geral: <span>2/5</span></div>
+                </div>
+            </div>
 
-<div class="card">
-Tempo Médio de Resolução
-<div class="metric">18 min</div>
-</div>
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-header"><span>Comportamental</span> <span>5/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-5" style="width: 100%"></div></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-header"><span>Técnico</span> <span>2/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-2" style="width: 40%"></div></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-header"><span>Pró-atividade</span> <span>1/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-1" style="width: 20%"></div></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-header"><span>Colaboração</span> <span>3/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-3" style="width: 60%"></div></div>
+                </div>
+            </div>
 
-<div class="card">
-SLA Cumprido
-<div class="metric">96%</div>
-</div>
+            <div class="details-section">
+                <div class="text-block strengths">
+                    <h3>Pontos Fortes</h3>
+                    <p class="scrollable">Compreende rápido os conceitos, é concentrado e segue orientações sem resistência. Claramente lê as documentações e faz questão de anotar em caderno pontos importantes de atenção, tem autonomia para aplicar o que acabou de aprender. Normalmente ajuda com tarefas de outros analistas quando solicitado.</p>
+                </div>
+                <div class="text-block improvements">
+                    <h3>Pontos de Melhoria</h3>
+                    <p class="scrollable">É necessário aplicar mais esforço na construção de chamados e exercitar atenção aos detalhes processuais. O caminho "mais fácil e rápido" para execução das tarefas precisa ser abandonado. É vital focar na qualidade do trabalho e reduzir a frequência de erros operacionais.</p>
+                </div>
+                <div class="text-block summary">
+                    <h3>Resumo e Contexto Geral</h3>
+                    <p class="scrollable">Gabriel apresenta bom comportamento profissional, sendo receptivo a orientações. No entanto, seu desempenho técnico e nível de proatividade precisam de melhoria significativa. A qualidade dos chamados tem sido baixa, com registros pouco detalhados. É necessário abandonar a abordagem focada apenas em rapidez e priorizar a qualidade técnica e aderência aos processos.</p>
+                </div>
+            </div>
+        </div>
 
-</div>
+        <div class="card">
+            <div class="profile-section">
+                <img src="https://ca.slack-edge.com/E08UPHKAEGN-U08CAS259G9-b6ab9daf3d9c-512" alt="Foto Gabrielly" class="profile-img">
+                <div class="profile-info">
+                    <h2>Gabrielly</h2>
+                    <div class="overall-score">Resumo Geral: <span>4/5</span></div>
+                </div>
+            </div>
 
-<table>
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-header"><span>Comportamental</span> <span>4/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-4" style="width: 80%"></div></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-header"><span>Técnico</span> <span>3/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-3" style="width: 60%"></div></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-header"><span>Pró-atividade</span> <span>5/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-5" style="width: 100%"></div></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-header"><span>Colaboração</span> <span>4/5</span></div>
+                    <div class="progress-bar"><div class="progress-fill score-4" style="width: 80%"></div></div>
+                </div>
+            </div>
 
-<thead>
-<tr>
-<th>Analista</th>
-<th>Tickets Resolvidos</th>
-<th>Tempo Médio</th>
-<th>SLA</th>
-<th>Performance</th>
-</tr>
-</thead>
+            <div class="details-section">
+                <div class="text-block strengths">
+                    <h3>Pontos Fortes</h3>
+                    <p class="scrollable">Nos últimos 6 meses tem se mostrado mais concentrada e focada na excelência. Demonstra interesse em entender assuntos aprofundados para melhorar a operação. Busca ajudar com tarefas manuais que exigem tempo. Reage a correções com maturidade e segue documentações sem resistência.</p>
+                </div>
+                <div class="text-block improvements">
+                    <h3>Pontos de Melhoria</h3>
+                    <p class="scrollable">Apesar da melhora recente, ocorreu oscilação de desempenho e muitos erros nos primeiros meses. Ela precisa manter atenção consistente em relação à execução de chamados e continuar trabalhando sua concentração durante o serviço para evitar erros pontuais.</p>
+                </div>
+                <div class="text-block summary">
+                    <h3>Resumo e Contexto Geral</h3>
+                    <p class="scrollable">Gabrielly apresenta boa postura profissional e ótima proatividade, destacando-se pelo interesse em contribuir além de suas atribuições. Possui conhecimento para executar atividades com qualidade, mas ainda ocorrem erros de atenção. Apresentou evolução significativa nos últimos meses; o principal foco agora é manter a consistência e atenção aos detalhes.</p>
+                </div>
+            </div>
+        </div>
 
-<tbody>
-
-<tr>
-<td>Ana Costa</td>
-<td>210</td>
-<td>16 min</td>
-<td>98%</td>
-<td class="good">Excelente</td>
-</tr>
-
-<tr>
-<td>Bruno Silva</td>
-<td>185</td>
-<td>21 min</td>
-<td>94%</td>
-<td class="medium">Boa</td>
-</tr>
-
-<tr>
-<td>Carlos Mendes</td>
-<td>160</td>
-<td>25 min</td>
-<td>91%</td>
-<td class="medium">Boa</td>
-</tr>
-
-<tr>
-<td>Daniel Rocha</td>
-<td>140</td>
-<td>32 min</td>
-<td>87%</td>
-<td class="bad">Atenção</td>
-</tr>
-
-<tr>
-<td>Fernanda Alves</td>
-<td>230</td>
-<td>15 min</td>
-<td>99%</td>
-<td class="good">Excelente</td>
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
+    </div>
 
 </body>
 </html>
